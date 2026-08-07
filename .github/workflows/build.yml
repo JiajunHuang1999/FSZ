@@ -1,0 +1,36 @@
+# Build verification across CUDA toolkits. GitHub-hosted runners have no
+# GPU, so this compiles the library, tool, examples, and tests but does not
+# execute them; execution tests (ctest) run on developer machines with a GPU.
+name: build
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  cuda-build:
+    runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: false
+      matrix:
+        cuda: ["12.4.1", "12.8.1", "13.2.1"]
+    container:
+      image: nvidia/cuda:${{ matrix.cuda }}-devel-ubuntu22.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install build tools
+        run: |
+          apt-get update
+          apt-get install -y --no-install-recommends cmake make g++ gfortran python3
+      - name: Configure
+        # No architecture override: CI compiles the library's defaults, which
+        # is what a plain clone-and-build gets (sm_80;90, plus sm_100 and PTX
+        # when the toolkit knows it).
+        run: cmake -S . -B build
+      - name: Build
+        run: cmake --build build -j
+      - name: Python package syntax check
+        run: |
+          python3 -m compileall python

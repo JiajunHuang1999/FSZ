@@ -1,0 +1,2 @@
+include README.md
+recursive-include fsz/_cuda *.cu *.cuh *.h *.hpp

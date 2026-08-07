@@ -1,0 +1,8 @@
+@PACKAGE_INIT@
+
+include(CMakeFindDependencyMacro)
+find_dependency(CUDAToolkit)
+
+include("${CMAKE_CURRENT_LIST_DIR}/fszTargets.cmake")
+
+check_required_components(fsz)

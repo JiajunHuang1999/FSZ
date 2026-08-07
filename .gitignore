@@ -1,0 +1,13 @@
+build/
+build_*/
+cmake-build/
+*.o
+*.a
+*.so
+*.fsz
+*.dec.f32
+*.log
+__pycache__/
+*.egg-info/
+dist/
+.pytest_cache/
